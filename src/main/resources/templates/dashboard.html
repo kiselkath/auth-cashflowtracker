@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard | Smart Expense</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .profile-card {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 15px;
+            background: #ffffff;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .profile-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 20px;
+            border: 3px solid #0d6efd;
+        }
+        .token-box {
+            max-height: 120px;
+            overflow: auto;
+            word-break: break-all;
+            font-size: 0.85rem;
+            background: #f1f3f5;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .logout-btn {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark bg-primary">
+    <div class="container-fluid">
+        <span class="navbar-brand mb-0 h1">Smart Expense Dashboard</span>
+    </div>
+</nav>
+
+<div class="profile-card">
+    <img th:src="${picture}" alt="Profile Picture" class="profile-img" />
+
+    <h2 th:text="${name}">User Name</h2>
+    <p class="text-muted mb-1" th:text="${email}">user@example.com</p>
+
+    <h6 class="mt-4">Your ID Token</h6>
+    <div class="token-box">
+        <span th:text="${token}">JWT token</span>
+    </div>
+
+    <a href="/logout" class="btn btn-outline-danger logout-btn">Logout</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
