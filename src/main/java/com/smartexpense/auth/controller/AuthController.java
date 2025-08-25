@@ -1,32 +1,52 @@
 package com.smartexpense.auth.controller;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.security.Key;
-import java.util.Date;
-
 @Controller
 public class AuthController {
-    private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256); // хранить в конфиге!
+
+    /**
+     * Custom login page shown at: /my_login
+     */
+    @GetMapping("/my_login")
+    public String loginPage() {
+        return "login"; // renders login.html
+    }
+
+    @GetMapping("/dashboard")
+    public String dashboard(Model model, @AuthenticationPrincipal OidcUser user) {
+
+        String fullName = user.getAttribute("name");
+        String email = user.getEmail();
+        String picture = user.getAttribute("picture");
+        String token = user.getIdToken().getTokenValue();
+
+        System.out.println(user.getAttributes());
+
+        model.addAttribute("name", fullName);
+        model.addAttribute("email", email);
+        model.addAttribute("token", token);
+        model.addAttribute("picture", picture);
+        return "dashboard";
+    }
+
+    /**
+     * Optional home page (accessible without login)
+     */
+    @GetMapping("/")
+    public String home() {
+        return "home"; // renders home.html if you want
+    }
 
     @GetMapping("/token")
     @ResponseBody
     public String getToken(@AuthenticationPrincipal OidcUser user){
-        String jwt = Jwts.builder()
-                .setSubject(user.getEmail())
-                .claim("name", user.getFullName())
-                .claim("picture", user.getAttribute("picture"))
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 3600_000)) // 1h
-                .signWith(key)
-                .compact();
-        return jwt;
+        return user.getIdToken().getTokenValue();
     }
+
 }
